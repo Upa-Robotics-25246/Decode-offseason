@@ -117,32 +117,7 @@ public class SDKTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        //drive code
-        double drive = (gamepad1.left_stick_y * -1);
-        double turn = (gamepad1.right_stick_x);
-        double strafe = (gamepad1.left_stick_x);
 
-        double FLspeed = drive + turn + strafe;
-        double FRspeed = drive - turn - strafe;
-        double BLspeed = drive + turn - strafe;
-        double BRspeed = drive - turn + strafe;
-
-
-        double maxF = Math.max((abs(FLspeed)),(abs(FRspeed)));
-        double maxB = Math.max((abs(BLspeed)),(abs(BRspeed)));
-        double maxFB_speed = Math.max(abs(maxF), abs(maxB));
-
-        if(maxFB_speed > 1){
-            FLspeed = FLspeed / maxFB_speed;
-            FRspeed = FRspeed / maxFB_speed;
-            BLspeed = BLspeed / maxFB_speed;
-            BRspeed = BRspeed / maxFB_speed;
-        }
-
-        fl.setPower(FLspeed);
-        fr.setPower(FRspeed);
-        bl.setPower(BLspeed);
-        br.setPower(BRspeed);
 
 
         //flywheel
@@ -322,6 +297,35 @@ public class SDKTeleOp extends OpMode {
         }
             //setting hood pos
         hood.setPosition(hoodPos);
+
+
+
+        //drive code
+        double drive = (gamepad1.left_stick_y * -1);
+        double turn = (gamepad1.right_stick_x);
+        double strafe = (gamepad1.left_stick_x);
+
+        double FLspeed = drive + turn + strafe;
+        double FRspeed = drive - turn - strafe;
+        double BLspeed = drive + turn - strafe;
+        double BRspeed = drive - turn + strafe;
+
+
+        double maxF = Math.max((abs(FLspeed)),(abs(FRspeed)));
+        double maxB = Math.max((abs(BLspeed)),(abs(BRspeed)));
+        double maxFB_speed = Math.max(abs(maxF), abs(maxB));
+
+        if(maxFB_speed > 1){
+            FLspeed = FLspeed / maxFB_speed;
+            FRspeed = FRspeed / maxFB_speed;
+            BLspeed = BLspeed / maxFB_speed;
+            BRspeed = BRspeed / maxFB_speed;
+        }
+
+        fl.setPower(FLspeed);
+        fr.setPower(FRspeed);
+        bl.setPower(BLspeed);
+        br.setPower(BRspeed);
 
 
     }
