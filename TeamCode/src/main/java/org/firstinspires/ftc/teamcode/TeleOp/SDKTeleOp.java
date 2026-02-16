@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.util.pedroPathing.Constants;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
@@ -64,6 +64,7 @@ public class SDKTeleOp extends OpMode {
     ControlSystem pid;//turret
 
     boolean isTurretManual = false;
+    double setpoint;
 
     @Override
     public void init() {
@@ -105,6 +106,15 @@ public class SDKTeleOp extends OpMode {
                 .posPid(turretpid)
                 .build();
 
+
+        //telemetry
+        telemetry.addData("Is flywheel On",()-> (flywheel.getPower()>0));
+        telemetry.addData("Is Transfer On",()-> (transfer.getPower()>0));
+        telemetry.addData("Is Intake On",()-> (intake.getPower()>0));
+        telemetry.addData("flywheelspeed",flywheel.getVelocity());
+        telemetry.addData("flywheel target", velocity);
+        telemetry.addData("hood pos", hood.getPosition());
+        telemetry.addData("setPoint", setpoint);
 
 
 
@@ -255,7 +265,7 @@ public class SDKTeleOp extends OpMode {
             }
         //Turret
             //turret auto aim
-            double setpoint = Math.toDegrees(Math.atan2(trackPoint.getY()-follower.getPose().getY(),
+            setpoint = Math.toDegrees(Math.atan2(trackPoint.getY()-follower.getPose().getY(),
                     trackPoint.getX()-follower.getPose().getX()));
             if(setpoint>180){
                 setpoint = 180;
@@ -278,14 +288,7 @@ public class SDKTeleOp extends OpMode {
             }
 
 
-        //telemetry
-        telemetry.addData("Is flywheel On",()-> (flywheel.getPower()>0));
-        telemetry.addData("Is Transfer On",()-> (transfer.getPower()>0));
-        telemetry.addData("Is Intake On",()-> (intake.getPower()>0));
-        telemetry.addData("flywheelspeed",flywheel.getVelocity());
-        telemetry.addData("flywheel target", velocity);
-        telemetry.addData("hood pos", hood.getPosition());
-        telemetry.addData("setPoint", setpoint);
+
 
 
         //Hood
@@ -327,6 +330,6 @@ public class SDKTeleOp extends OpMode {
         bl.setPower(BLspeed);
         br.setPower(BRspeed);
 
-
+        telemetry.update();
     }
 }
