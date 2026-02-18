@@ -29,7 +29,7 @@ public class turretAutoAim extends OpMode {
 
 
 
-    double gearRatio = 1/(4.6);
+    double gearRatio = 4.6;
     double getDegrees(){
         return turret.getCurrentPosition() * 360.0/(ppr*gearRatio);
     }
