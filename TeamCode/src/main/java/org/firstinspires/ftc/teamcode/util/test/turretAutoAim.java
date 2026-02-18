@@ -31,7 +31,7 @@ public class turretAutoAim extends OpMode {
 
     double gearRatio = 4.6;
     double getDegrees(){
-        return turret.getCurrentPosition() * 360.0/(ppr*gearRatio)+90;
+        return turret.getCurrentPosition() * 360.0/(ppr*gearRatio);
     }
     public static PIDCoefficients turretpid = new PIDCoefficients(0,0,0);
 
@@ -51,7 +51,7 @@ public class turretAutoAim extends OpMode {
     public void loop() {
         follower.update();
         double setpoint = Math.toDegrees(Math.atan2(trackPoint.getY()-follower.getPose().getY(),
-                trackPoint.getX()-follower.getPose().getX()));
+                trackPoint.getX()-follower.getPose().getX())-follower.getPose().getHeading());
         if(setpoint>180){
             setpoint = 180;
         }else if(setpoint<-180){
