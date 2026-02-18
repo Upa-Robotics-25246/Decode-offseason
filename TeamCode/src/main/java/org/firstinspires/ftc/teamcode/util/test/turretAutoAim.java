@@ -67,6 +67,9 @@ public class turretAutoAim extends OpMode {
         telemetry.addData("turretAngle",getDegrees());
         telemetry.update();
 
+        follower.update();
+
+
 
 
     }
