@@ -31,7 +31,7 @@ public class turretAutoAim extends OpMode {
 
     double gearRatio = 4.6;
     double getDegrees(){
-        return turret.getCurrentPosition() * 360.0/(ppr*gearRatio);
+        return turret.getCurrentPosition() * 360.0/(ppr*gearRatio)+90;
     }
     public static PIDCoefficients turretpid = new PIDCoefficients(0,0,0);
 
@@ -42,13 +42,14 @@ public class turretAutoAim extends OpMode {
         turret = hardwareMap.get(DcMotorEx.class,"turret");
 
         pid = ControlSystem.builder()
-                .velPid(turretpid)
+                .posPid(turretpid)
                 .build();
 
     }
 
     @Override
     public void loop() {
+        follower.update();
         double setpoint = Math.toDegrees(Math.atan2(trackPoint.getY()-follower.getPose().getY(),
                 trackPoint.getX()-follower.getPose().getX()));
         if(setpoint>180){
@@ -57,6 +58,12 @@ public class turretAutoAim extends OpMode {
             setpoint = -180;
         }
         pid.setGoal(new KineticState(setpoint,0));
+        if(gamepad1.aWasPressed()){
+            turretpid.kP+=0.001;
+        }
+        if(gamepad1.bWasPressed()){
+            turretpid.kD+=0.001;
+        }
 
 
 
@@ -65,6 +72,8 @@ public class turretAutoAim extends OpMode {
         telemetry.addData("setPoint",setpoint);
         telemetry.addData("turretPos",turret.getCurrentPosition());
         telemetry.addData("turretAngle",getDegrees());
+        telemetry.addData("kp",turretpid.kP);
+        telemetry.addData("kD",turretpid.kD);
         telemetry.update();
 
         follower.update();
