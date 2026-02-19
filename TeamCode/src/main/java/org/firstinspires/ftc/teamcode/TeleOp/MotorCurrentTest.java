@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.pedroPathing.Constants;
 
 import dev.nextftc.control.ControlSystem;
@@ -18,7 +19,7 @@ import dev.nextftc.control.feedback.PIDCoefficients;
 import dev.nextftc.control.feedforward.BasicFeedforwardParameters;
 
 @TeleOp()
-public class SDKTeleOp extends OpMode {
+public class MotorCurrentTest extends OpMode {
     public static DcMotorSimple.Direction flDirection = DcMotorEx.Direction.REVERSE;
     public static DcMotorEx.Direction frDirection = DcMotorEx.Direction.FORWARD;
     public static DcMotorSimple.Direction blDirection = DcMotorEx.Direction.REVERSE;
@@ -128,14 +129,14 @@ public class SDKTeleOp extends OpMode {
 
         //flywheel
 
-            //velocity manual adjustment
+        //velocity manual adjustment
         if(gamepad1.dpadLeftWasPressed()){
             velocity -=100;
         }else if(gamepad1.dpadRightWasPressed()){
             velocity+= 100;
         }
 
-            //flywheel toggles
+        //flywheel toggles
         if (gamepad2.xWasPressed()){
             flywheelPID = !flywheelPID;
         }
@@ -143,7 +144,7 @@ public class SDKTeleOp extends OpMode {
         if (gamepad2.yWasPressed()){
             flywheelReversed = !flywheelReversed;
         }
-            //flywheel toggle handlers
+        //flywheel toggle handlers
         if(!flywheelReversed) {
             if (flywheelPID) {
                 flywheel.setPower(flypidf.calculate(new KineticState(
@@ -169,134 +170,134 @@ public class SDKTeleOp extends OpMode {
 
         //intake
 
-            //Intake INWARDS
-                if(gamepad2.leftBumperWasPressed()){
-                    switch (intakeState) {
-                        case FORWARD:
-                            intakeState =intakeState.OFF;
-                            break;
-                        case REVERSE:
-                           intakeState = intakeState.FORWARD;
-                            break;
-                        case OFF:
-                           intakeState =intakeState.FORWARD;
-                            break;
-                    }
-                }
-            //Extake -INTAKE OUTWARDS
+        //Intake INWARDS
+        if(gamepad2.leftBumperWasPressed()){
+            switch (intakeState) {
+                case FORWARD:
+                    intakeState =intakeState.OFF;
+                    break;
+                case REVERSE:
+                    intakeState = intakeState.FORWARD;
+                    break;
+                case OFF:
+                    intakeState =intakeState.FORWARD;
+                    break;
+            }
+        }
+        //Extake -INTAKE OUTWARDS
 
-                if(gamepad2.rightBumperWasPressed()) {
-                    switch (intakeState) {
-                        case FORWARD:
-                            intakeState = intakeState.REVERSE;
-                            break;
-                        case REVERSE:
-                            intakeState = intakeState.OFF;
-                            break;
-                        case OFF:
-                            intakeState = intakeState.REVERSE;
-                            break;
-                    }
-                }
+        if(gamepad2.rightBumperWasPressed()) {
+            switch (intakeState) {
+                case FORWARD:
+                    intakeState = intakeState.REVERSE;
+                    break;
+                case REVERSE:
+                    intakeState = intakeState.OFF;
+                    break;
+                case OFF:
+                    intakeState = intakeState.REVERSE;
+                    break;
+            }
+        }
         //Transfer
 
 
-            //TransferInward
+        //TransferInward
 
-            if (gamepad2.aWasPressed()){
-                switch (transferState) {
-                    case FORWARD:
-                        transferState = transferState.OFF;
-                        break;
-                    case OFF:
-                        transferState =transferState.FORWARD;
-                        break;
-                    case REVERSE:
-                        transferState = transferState.FORWARD;
-                        break;
-
-                }
-            }
-
-            //Transfer Outward
-
-            if(gamepad2.bWasPressed()){
-                switch (transferState) {
-                    case FORWARD:
-                        transferState = transferState.REVERSE;
-                        break;
-                    case OFF:
-                        transferState = transferState.REVERSE;
-                        break;
-                    case REVERSE:
-                        transferState =transferState.OFF;
-                        break;
-                }
-            }
-
-
-            //transfer and turret state handlers
-
-            switch(transferState){
-                case OFF:
-                    transfer.setPower(0);
-                    transferOn = false;
-                    break;
-
+        if (gamepad2.aWasPressed()){
+            switch (transferState) {
                 case FORWARD:
-                    transfer.setPower(1);
-                    transferOn = true;
+                    transferState = transferState.OFF;
+                    break;
+                case OFF:
+                    transferState =transferState.FORWARD;
                     break;
                 case REVERSE:
-                    transfer.setPower(-1);
-                    transferOn = true;
+                    transferState = transferState.FORWARD;
                     break;
+
             }
-            switch(intakeState){
-                case OFF:
-                    intake.setPower(0);
-                    intakeOn = false;
-                    break;
+        }
+
+        //Transfer Outward
+
+        if(gamepad2.bWasPressed()){
+            switch (transferState) {
                 case FORWARD:
-                    intake.setPower(1);
-                    intakeOn = true;
+                    transferState = transferState.REVERSE;
+                    break;
+                case OFF:
+                    transferState = transferState.REVERSE;
                     break;
                 case REVERSE:
-                    intake.setPower(-1);
-                    intakeOn = true;
+                    transferState =transferState.OFF;
                     break;
             }
+        }
+
+
+        //transfer and turret state handlers
+
+        switch(transferState){
+            case OFF:
+                transfer.setPower(0);
+                transferOn = false;
+                break;
+
+            case FORWARD:
+                transfer.setPower(1);
+                transferOn = true;
+                break;
+            case REVERSE:
+                transfer.setPower(-1);
+                transferOn = true;
+                break;
+        }
+        switch(intakeState){
+            case OFF:
+                intake.setPower(0);
+                intakeOn = false;
+                break;
+            case FORWARD:
+                intake.setPower(1);
+                intakeOn = true;
+                break;
+            case REVERSE:
+                intake.setPower(-1);
+                intakeOn = true;
+                break;
+        }
         //Turret
-            //turret auto aim
-            setpoint = Math.toDegrees(Math.atan2(trackPoint.getY()-follower.getPose().getY(),
-                    trackPoint.getX()-follower.getPose().getX())-follower.getPose().getHeading());
-            // telemetry.addData("raw setpoint", setpoint);
-            if(setpoint>200){
-                setpoint = setpoint - 360;
-            }else if(setpoint<-200){
-                setpoint = setpoint + 360;
-            }
-            pid.setGoal(new KineticState(setpoint,0));
+        //turret auto aim
+        setpoint = Math.toDegrees(Math.atan2(trackPoint.getY()-follower.getPose().getY(),
+                trackPoint.getX()-follower.getPose().getX())-follower.getPose().getHeading());
+        // telemetry.addData("raw setpoint", setpoint);
+        if(setpoint>200){
+            setpoint = setpoint - 360;
+        }else if(setpoint<-200){
+            setpoint = setpoint + 360;
+        }
+        pid.setGoal(new KineticState(setpoint,0));
 
 
-            if(!isTurretManual) {
-                turret.setPower(pid.calculate(new KineticState(getDegrees(turret), 0)));
-            }else {
+        if(!isTurretManual) {
+            turret.setPower(pid.calculate(new KineticState(getDegrees(turret), 0)));
+        }else {
 
-                //turret manual control
-                turret.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
-            }
+            //turret manual control
+            turret.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+        }
 
-            if(gamepad1.rightBumperWasPressed()){
-               isTurretManual = !isTurretManual;
-            }
+        if(gamepad1.rightBumperWasPressed()){
+            isTurretManual = !isTurretManual;
+        }
 
 
 
 
 
         //Hood
-            //Hood postion setters
+        //Hood postion setters
         if(gamepad1.dpadUpWasPressed()){
             hoodPos+=0.1;
         }else if(gamepad1.dpadDownWasPressed()){
@@ -307,7 +308,7 @@ public class SDKTeleOp extends OpMode {
         }else if(hoodPos<0.5){
             hoodPos=0.5;
         }
-            //setting hood pos
+        //setting hood pos
         hood.setPosition(hoodPos);
 
 
@@ -340,16 +341,14 @@ public class SDKTeleOp extends OpMode {
         br.setPower(BRspeed);
 
 
-        telemetry.addData("Is flywheel On",flywheelPID);
-        telemetry.addData("Is Transfer On",transferOn);
-        telemetry.addData("Transfer Direction",transferState);
-        telemetry.addData("Is Intake On",transferOn);
-        telemetry.addData("intake Direction",intakeState);
-        telemetry.addData("flywheel speed",flywheel.getVelocity());
-        telemetry.addData("flywheel target", velocity);
-        telemetry.addData("hood pos", hood.getPosition());
-        telemetry.addData("setPoint", setpoint);
-        telemetry.addData("turretangle", getDegrees(turret));
+        telemetry.addData("FL Motor Current", fl.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("FR Motor Current", fr.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("BL Motor Current", bl.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("BR Motor Current", br.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Intake Motor Current", intake.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Transfer Motor Current", transfer.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Flywheel Motor Current", flywheel.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Turret Motor Current", turret.getCurrent(CurrentUnit.AMPS));
         telemetry.update();
         follower.update();
     }
