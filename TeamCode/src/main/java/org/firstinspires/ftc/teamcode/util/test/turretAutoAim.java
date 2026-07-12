@@ -16,7 +16,7 @@ import dev.nextftc.control.feedback.PIDCoefficients;
 import dev.nextftc.control.feedforward.BasicFeedforwardParameters;
 
 @Configurable
-@TeleOp(name = "ABSOLUTE WEEWOO")
+@TeleOp()
 public class turretAutoAim extends OpMode {
 
     DcMotorEx turret;
