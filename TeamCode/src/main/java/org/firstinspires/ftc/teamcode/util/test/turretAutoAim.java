@@ -6,6 +6,7 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.util.pedroPathing.Constants;
 
@@ -23,6 +24,8 @@ public class turretAutoAim extends OpMode {
     Follower follower;
     Pose trackPoint = new Pose(144,144);
     Pose startPose =  new Pose(144, 0, Math.toRadians(90));
+    ElapsedTime wee = new ElapsedTime();
+
     double ppr = 751.8;// from motor, idk the motor im using rn
 
     ControlSystem pid;
@@ -45,10 +48,13 @@ public class turretAutoAim extends OpMode {
                 .posPid(turretpid)
                 .build();
 
+
     }
+
 
     @Override
     public void loop() {
+
         follower.update();
         double setpoint = Math.toDegrees(Math.atan2(trackPoint.getY()-follower.getPose().getY(),
                 trackPoint.getX()-follower.getPose().getX())-follower.getPose().getHeading());
