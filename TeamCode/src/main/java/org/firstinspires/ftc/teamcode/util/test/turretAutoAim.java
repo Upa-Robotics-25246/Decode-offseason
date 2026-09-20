@@ -26,20 +26,23 @@ public class turretAutoAim extends OpMode {
     Pose startPose =  new Pose(144, 0, Math.toRadians(90));
     ElapsedTime wee = new ElapsedTime();
 
-    double ppr = 751.8;// from motor, idk the motor im using rn
+    double ppr = 751.8;
 
     ControlSystem pid;
 
 
-
     double gearRatio = 4.6;
+
     double getDegrees(){
         return turret.getCurrentPosition() * 360.0/(ppr*gearRatio);
     }
+
+
     public static PIDCoefficients turretpid = new PIDCoefficients(0,0,0);
 
     @Override
     public void init() {
+
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
         turret = hardwareMap.get(DcMotorEx.class,"turret");
